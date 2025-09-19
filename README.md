@@ -21,7 +21,7 @@ Try it live: *URL*
 
 ## Local setup
 
-### 1. Clone the repo
+### 1. Clone the repository
 git clone https://github.com/Adam-Robinson9/Data-Query-Bot.git
 
 cd Data-Query-Bot
