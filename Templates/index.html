@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSV Data Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>AI Data Query Bot</h1>
+
+    <!-- File upload section -->
+    <h2>Upload CSV</h2>
+    <input type="file" id="csvFile">
+    <button onclick="uploadCSV()">Upload</button>
+    <p id="uploadResult"></p>
+
+    <!-- Question section -->
+    <h2>Ask a Question</h2>
+    <input type="text" id="question" size="50" placeholder="Type your question...">
+    <button onclick="askQuestion()">Ask</button>
+
+    <!-- Results section -->
+    <h2>Answer</h2>
+    <pre id="answer"></pre>
+
+    <h2>Code Generated</h2>
+    <pre id="code"></pre>
+
+    <h2>Images</h2>
+    <div id="images"></div>
+
+    <script>
+    // Upload CSV
+    async function uploadCSV() {
+        let fileInput = document.getElementById("csvFile");
+        if (fileInput.files.length === 0) {
+            alert("Please select a file");
+            return;
+        }
+
+        // Prepare file as formdata for HTML request
+        let formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+
+        // Send POST request to /upload
+        let response = await fetch("/upload", { method: "POST", body: formData });
+        let result = await response.json();
+
+        // Show success or error message
+        if (response.ok) {
+            document.getElementById("uploadResult").innerText = "Uploaded successfully. \nColumns: " + result.columns.join(", ");
+        } else {
+            document.getElementById("uploadResult").innerText = "Error: " + result.error;
+        }
+    }
+
+    // Ask a question
+    async function askQuestion() {
+        // Make sure that a question has been entered
+        let question = document.getElementById("question").value;
+        if (!question) {
+            alert("Please type a question");
+            return;
+        }
+        // Tell user a response is being generated if a question has been asked
+        else{
+            document.getElementById("answer").innerText = "Generating Response...";
+        }
+
+        // Send POST request to /query with the question
+        let response = await fetch("/query", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ question: question })
+        });
+        let result = await response.json();
+
+        // Display the answer, code and any images generated
+        if (response.ok) {
+            document.getElementById("answer").innerText = result.answer;
+            document.getElementById("code").innerText = result.code;
+
+            let imagesDiv = document.getElementById("images");
+            imagesDiv.innerHTML = "";
+            result.images.forEach(imgBase64 => {
+                let img = document.createElement("img");
+                img.src = "data:image/png;base64," + imgBase64;
+                img.style.maxWidth = "400px";
+                imagesDiv.appendChild(img);
+            });
+        } else {
+            document.getElementById("answer").innerText =
+            "Error: " + result.error;
+        }
+    }
+    </script>
+</body>
+</html>
