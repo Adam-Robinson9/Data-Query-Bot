@@ -1,10 +1,11 @@
 # AI Data Query Bot
 
 An AI powered chatbot that answers natural language questions about an uploaded database, providing an answer and a generated plot if required.
-Built with Python, Flask, HTML/CSS and deployed on Azure App Service.
+Built with Python, Flask, HTML/CSS and deployed with Azure App Service.
 
-Try it live: *URL*
-(Note: hosted on Azure’s free tier — the first request may take up to 30 seconds to wake the app from “sleep.”)
+Try it live: dataquerybot-hph4dhb8edecg2hg.francecentral-01.azurewebsites.net
+
+(Note: hosted on Azure’s free tier — the first request may take up to several minutes to load.)
 
 ## Features
 - Upload any CSV file using a simple web interface.
